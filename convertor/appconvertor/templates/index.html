@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bulma.min.css' %}" />
+    <title>Hexadecimal-Binary</title>
+    <style>
+        .is-mycolor {
+            background: linear-gradient(to right, hsl(37, 95%, 8%), hsl(256, 83%, 27%));
+        }
+        .is-my-second-color{
+            background-color: dimgrey;
+        }
+    </style>
+    <title>Conversion</title>
+</head>
+
+<body>
+    <section class="hero is-fullheight is-mycolor">
+        <div class="hero-body">
+            <div class="box is-my-second-color" style="margin:auto;">
+                <h1 class="title is-3 has-text-success">
+                     ASCII Convertor
+                </h1>
+
+                <form>
+                    {% csrf_token %}
+                    <div class="control">
+                        <input id="myInput" type="text" class="input is-medium"
+                                placeholder=" Type any character ...">
+                    </div>
+                </form>
+
+                <section class="section" id="convertinput"style="display:none;">
+                    <div class="container my-4">
+                        <div class="notification is-success">
+                            <h4>Binary: </h4>
+                            <Hexadiv id="myBin"></Hexadiv>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="notification is-info">
+                            <h4>Hexadecimal: </h4>
+                            <div id="myHex"></div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+    
+    </section>
+
+<!-- My Script ... -->
+    <script>
+        // Begining of the main fonction
+        document.querySelector("#myInput").addEventListener("input", function(event){
+            event.preventDefault();
+            let numvalue = event.target.value;
+            //-----------------------------------------------------------
+
+            //Sending data from form to backend through fectch_api
+            let form = new FormData();
+            form.append("numvalue", document.getElementById("myInput").value);
+
+            let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            let request = new Request("{% url 'compute' %}", {
+                method: 'POST',
+                body: form,
+                headers: { "X-CSRFToken": csrfTokenValue }
+            })
+            //-----------------------------------------------------------
+
+
+
+
+            // Simple verification to check if field is empity
+            if (numvalue == "") {
+                document.getElementById('convertinput').style.display="none";
+            }
+
+            else {
+                document.getElementById('convertinput').style.display="block";
+            }
+            //-----------------------------------------------------------
+
+            //Geting the response from the backend to the frontend
+            fetch(request)
+                .then(response => response.json())
+                .then(result => {
+                    let binary_result = document.getElementById("myBin");
+                    binary_result.innerHTML = result["result_of_binairy"];
+
+                    let hexadec_result = document.getElementById("myHex");
+                    hexadec_result.innerHTML = result["result_of_hexadec"];
+
+                })
+        })
+//-----------------------------------------------------------
+
+    </script>
+
+</body>
+
+</html>
