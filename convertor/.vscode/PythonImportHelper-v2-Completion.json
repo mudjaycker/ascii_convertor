@@ -1,0 +1,20 @@
+[
+    {
+        "label": "eel",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "eel",
+        "description": "eel",
+        "detail": "eel",
+        "documentation": {}
+    },
+    {
+        "label": "to_hexa",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def to_hexa(char: str):\n    if char:\n        unicode_str = char.encode(\"utf-8\")\n        result = unicode_str.hex()\n        return result\neel.start('index.html')",
+        "detail": "main",
+        "documentation": {}
+    }
+]
